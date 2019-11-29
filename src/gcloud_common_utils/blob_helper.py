@@ -54,3 +54,13 @@ def download_blob(bucket_name: str, source_blob_name: str, raw_file):
     blob.download_to_file(raw_file)
     logging.info('Blob file was downloaded', extra={'file': source_blob_name})
     return raw_file
+
+
+@typechecked
+def delete_blob(bucket_name: str, source_blob_name: str):
+    storage_client = storage.Client()
+    logging.info('Deleting file', extra={'file': source_blob_name, 'bucket_name': bucket_name})
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(source_blob_name)
+    blob.delete()
+    logging.info("Blob deleted")

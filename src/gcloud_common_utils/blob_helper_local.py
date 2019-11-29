@@ -2,7 +2,6 @@ import os
 import glob
 import logging
 from typing import Set
-
 from typeguard import typechecked
 
 
@@ -59,4 +58,4 @@ def download_blob(bucket_name: str, source_blob_name: str, raw_file):
 def delete_blob(bucket_name: str, destination_blob_name: str):
     file_path = _get_path(bucket_name, destination_blob_name)
     logging.info(f"Deleting file={file_path} from local filesystem")
-    # os.remove(file_path)
+    os.remove(file_path)
