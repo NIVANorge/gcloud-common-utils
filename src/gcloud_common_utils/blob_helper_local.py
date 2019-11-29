@@ -2,7 +2,7 @@ import os
 import glob
 import logging
 from typing import Set
-
+import shutil
 from typeguard import typechecked
 
 
@@ -56,7 +56,15 @@ def download_blob(bucket_name: str, source_blob_name: str, raw_file):
 
 
 @typechecked
+def download_blob2file(bucket_name: str, source_blob_name: str, target_filename: str):
+    path = _get_path(bucket_name, source_blob_name)
+    logging.info("Reading local file "+path)
+    target_path = os.getcwd() + "/" + target_filename
+    shutil.copy(path, target_path)
+
+
+@typechecked
 def delete_blob(bucket_name: str, destination_blob_name: str):
     file_path = _get_path(bucket_name, destination_blob_name)
     logging.info(f"Deleting file={file_path} from local filesystem")
-    # os.remove(file_path)
+    os.remove(file_path)
