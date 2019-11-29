@@ -2,7 +2,6 @@ import os
 import glob
 import logging
 from typing import Set
-import shutil
 from typeguard import typechecked
 
 
@@ -53,14 +52,6 @@ def download_blob(bucket_name: str, source_blob_name: str, raw_file):
     with open(path, "rb") as file_in:
         raw_file.write(file_in.read())
     return raw_file
-
-
-@typechecked
-def download_blob2file(bucket_name: str, source_blob_name: str, target_filename: str):
-    path = _get_path(bucket_name, source_blob_name)
-    logging.info("Reading local file "+path)
-    target_path = os.getcwd() + "/" + target_filename
-    shutil.copy(path, target_path)
 
 
 @typechecked

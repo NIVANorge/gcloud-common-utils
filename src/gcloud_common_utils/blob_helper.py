@@ -57,16 +57,6 @@ def download_blob(bucket_name: str, source_blob_name: str, raw_file):
 
 
 @typechecked
-def download_blob2file(bucket_name: str, source_blob_name: str, target_filename: str):
-    storage_client = storage.Client()
-    logging.info('Downloading file', extra={'file': source_blob_name, 'bucket_name': bucket_name})
-    bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(source_blob_name)
-    blob.download_to_filename(target_filename)
-    logging.info("Blob file was downloaded to file {target_filename}", extra={'file': source_blob_name})
-
-
-@typechecked
 def delete_blob(bucket_name: str, source_blob_name: str):
     storage_client = storage.Client()
     logging.info('Deleting file', extra={'file': source_blob_name, 'bucket_name': bucket_name})
