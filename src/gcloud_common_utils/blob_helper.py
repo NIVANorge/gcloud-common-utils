@@ -8,14 +8,14 @@ from typeguard import typechecked
 
 
 @typechecked
-def upload_blob(bucket_name: str, destination_blob_name: str, bytes_io_object: IOBase):
+def upload_blob(bucket_name: str, destination_blob_name: str, file_like_object: IOBase):
     """Uploads a file to the bucket."""
     storage_client = storage.Client()
     with LogContext(bucket_name=bucket_name, destination_blob_name=destination_blob_name):
         logging.info("Attempting to upload file")
         bucket = storage_client.bucket(bucket_name)
         new_blob = bucket.blob(destination_blob_name)
-        new_blob.upload_from_file(bytes_io_object)
+        new_blob.upload_from_file(file_like_object)
         logging.info("File uploaded completed")
 
 
@@ -46,14 +46,14 @@ def blob_exists(bucket_name: str, partial_file_path: str) -> bool:
 
 
 @typechecked
-def download_blob(bucket_name: str, source_blob_name: str, raw_file):
+def download_blob(bucket_name: str, source_blob_name: str, file_like_object):
     storage_client = storage.Client()
     logging.info('Downloading file', extra={'file': source_blob_name, 'bucket_name': bucket_name})
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(source_blob_name)
-    blob.download_to_file(raw_file)
+    blob.download_to_file(file_like_object)
     logging.info('Blob file was downloaded', extra={'file': source_blob_name})
-    return raw_file
+    return file_like_object
 
 
 @typechecked
