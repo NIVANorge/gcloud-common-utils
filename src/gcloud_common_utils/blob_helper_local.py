@@ -11,7 +11,7 @@ def _get_path(bucket_name, file_path) -> str:
 
 
 @typechecked
-def upload_blob(bucket_name: str, destination_blob_name: str, bytes_io_object):
+def upload_blob(bucket_name: str, destination_blob_name: str, file_like_object):
     """
     writes files to local filesystem instead of cloud storage. Intended for local dev usage
     Also publishes a message to pubsub using the
@@ -23,7 +23,8 @@ def upload_blob(bucket_name: str, destination_blob_name: str, bytes_io_object):
     if not os.path.exists(directory):
         os.makedirs(directory)
     with open(file_path, "wb") as f:
-        f.write(bytes_io_object.getvalue())
+        file_like_object.seek(0)
+        f.write(file_like_object.read())
 
 
 @typechecked
@@ -46,12 +47,12 @@ def blob_exists(bucket_name: str, partial_file_path: str) -> bool:
 
 
 @typechecked
-def download_blob(bucket_name: str, source_blob_name: str, raw_file):
+def download_blob(bucket_name: str, source_blob_name: str, file_like_object):
     path = _get_path(bucket_name, source_blob_name)
     logging.info(f"Reading local file {path}")
     with open(path, "rb") as file_in:
-        raw_file.write(file_in.read())
-    return raw_file
+        file_like_object.write(file_in.read())
+    return file_like_object
 
 
 @typechecked
