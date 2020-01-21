@@ -1,5 +1,5 @@
 # prod dependencies
-google-cloud-storage==1.22.0
-google-cloud-pubsub==1.0.2
-typeguard==2.6.0
-nivacloud_logging==0.8.8
+google-cloud-storage>=1.22.0,<2.0.0
+google-cloud-pubsub>=1.0.0,<2.0.0
+typeguard>=2.6.0,<3.0.0
+nivacloud_logging>=0.8.8
