@@ -30,7 +30,7 @@ def list_blobs(bucket_name: str, prefix: str) -> Set[str]:
     for blob in bucket_list:
         bucket_file_set.add(blob.name.rsplit('/', 1)[1] if '/' in blob.name else blob.name)
 
-    logging.info(f'Files found in cloud bucket {bucket_name} with prefix{prefix}',
+    logging.info(f'{len(bucket_file_set)} files found in cloud bucket {bucket_name} with prefix "{prefix}"',
                  extra={'bucket_file_count': len(bucket_file_set),
                         'bucket_name': bucket_name, 'prefix': prefix})
 
