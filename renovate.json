@@ -1,5 +1,5 @@
 {
     "extends": ["config:base"],
-    "assignees":  ["RmStorm", "skrytebane"],
+    "assignees":  ["RmStorm"],
     "prHourlyLimit": 5
 }
