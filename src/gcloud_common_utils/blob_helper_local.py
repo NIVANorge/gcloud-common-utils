@@ -18,13 +18,22 @@ def upload_blob(bucket_name: str, destination_blob_name: str, file_like_object):
     topic_name <bucket-name>-updates as a convention (emulating storage notifications)
     """
     logging.info(f"Writing file={destination_blob_name} to local filesystem")
-    file_path = _get_path(bucket_name, destination_blob_name)
+    temporary_bucket_name = "temp_file_upload"
+    file_path = _get_path(temporary_bucket_name, destination_blob_name)
     directory, filename = os.path.split(file_path)
+    logging.info(f"Writing first to a temporary location {file_path}")
     if not os.path.exists(directory):
         os.makedirs(directory)
     with open(file_path, "wb") as f:
         file_like_object.seek(0)
         f.write(file_like_object.read())
+
+    destination_path = _get_path(bucket_name, destination_blob_name)
+    directory, filename = os.path.split(destination_path)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    logging.info(f"Moving to final destination {destination_path}")
+    os.rename(file_path, destination_path)
 
 
 @typechecked
