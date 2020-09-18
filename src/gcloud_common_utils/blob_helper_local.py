@@ -1,8 +1,12 @@
 import os
 import glob
 import logging
+import datetime as dt
 from typing import Set
 from typeguard import typechecked
+
+
+TEMP_BUCKET_NAME = "temp_file_upload"
 
 
 def _get_path(bucket_name, file_path) -> str:
@@ -18,13 +22,20 @@ def upload_blob(bucket_name: str, destination_blob_name: str, file_like_object):
     topic_name <bucket-name>-updates as a convention (emulating storage notifications)
     """
     logging.info(f"Writing file={destination_blob_name} to local filesystem")
-    file_path = _get_path(bucket_name, destination_blob_name)
-    directory, filename = os.path.split(file_path)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    _, filename = os.path.split(destination_blob_name)
+
+    # Appending microsecond timestamp to filename for uniqueness in temp folder
+    file_path = _get_path(TEMP_BUCKET_NAME, filename + dt.datetime.now().strftime('_%H_%M_%S_%f'))
+    logging.debug(f"Writing first to a temporary location {file_path}")
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, "wb") as f:
         file_like_object.seek(0)
         f.write(file_like_object.read())
+
+    destination_path = _get_path(bucket_name, destination_blob_name)
+    logging.debug(f"Moving to final destination {destination_path}")
+    os.makedirs(os.path.dirname(destination_path), exist_ok=True)
+    os.rename(file_path, destination_path)
 
 
 @typechecked
