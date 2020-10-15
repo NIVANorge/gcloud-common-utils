@@ -8,7 +8,7 @@ from typeguard import typechecked
 
 
 @typechecked
-def upload_blob(bucket_name: str, destination_blob_name: str, file_like_object: IOBase):
+def upload_blob(bucket_name: str, destination_blob_name: str, file_like_object):
     """Uploads a file to the bucket."""
     storage_client = storage.Client()
     with LogContext(bucket_name=bucket_name, destination_blob_name=destination_blob_name):
