@@ -2,6 +2,7 @@ import os
 import glob
 import logging
 import datetime as dt
+import shutil
 from typing import Set
 from typeguard import typechecked
 
@@ -28,9 +29,8 @@ def upload_blob(bucket_name: str, destination_blob_name: str, file_like_object):
     file_path = _get_path(TEMP_BUCKET_NAME, filename + dt.datetime.now().strftime('_%H_%M_%S_%f'))
     logging.debug(f"Writing first to a temporary location {file_path}")
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    with open(file_path, "wb") as f:
-        file_like_object.seek(0)
-        f.write(file_like_object.read())
+    with open(file_path, "wb") as file:
+        shutil.copyfileobj(file_like_object, file)
 
     destination_path = _get_path(bucket_name, destination_blob_name)
     logging.debug(f"Moving to final destination {destination_path}")
@@ -61,8 +61,8 @@ def blob_exists(bucket_name: str, partial_file_path: str) -> bool:
 def download_blob(bucket_name: str, source_blob_name: str, file_like_object):
     path = _get_path(bucket_name, source_blob_name)
     logging.info(f"Reading local file {path}")
-    with open(path, "rb") as file_in:
-        file_like_object.write(file_in.read())
+    with open(path, "rb") as file:
+        shutil.copyfileobj(file, file_like_object)
     return file_like_object
 
 
