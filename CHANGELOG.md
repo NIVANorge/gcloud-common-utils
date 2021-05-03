@@ -10,6 +10,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.3.0] - 2021-05-03
 
 - Setup logcontext with trace_id from message attributes, if present.
+- updated pubsub version range to only allow version >2.0.0
+
 
 
 ## Previous changes
