@@ -34,7 +34,9 @@ def _pull_and_handle_message(subscriber, subscription_path, message_handler):
     received_message = response.received_messages[0]
     # creating the ack callback with ack_id as a function scoped variable
     ack_callback = _create_message_ack_fn(subscriber, subscription_path, received_message.ack_id)
-    message_handler(received_message.message, ack_callback)
+    trace_id = received_message.message.attributes.get("trace_id") or generate_trace_id()
+    with LogContext(trace_id=trace_id):
+        message_handler(received_message.message, ack_callback)
 
 
 def subscribe_synchronously(project_id: str, subscription_name: str, callback: Callable):
@@ -58,12 +60,11 @@ def subscribe_synchronously(project_id: str, subscription_name: str, callback: C
 
     def subscribe(message_handler: Callable):
         while sig_handler.running:
-            with LogContext(trace_id=generate_trace_id()):
-                try:
-                    _pull_and_handle_message(subscriber, subscription_path, message_handler)
-                except DeadlineExceeded:
-                    logging.debug("Received deadline exceeded event when polling, this is expected if no messages")
-                    pass
+            try:
+                _pull_and_handle_message(subscriber, subscription_path, message_handler)
+            except DeadlineExceeded:
+                logging.debug("Received deadline exceeded event when polling, this is expected if no messages")
+                pass
 
     with LogContext(subscription_path=subscription_path):
         logging.info("Set up subscription")
