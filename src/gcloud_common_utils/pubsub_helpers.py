@@ -20,7 +20,7 @@ class SigHandler:
 def _create_message_ack_fn(subscriber: SubscriberClient, subscription_path: str, ack_id: str) -> Callable:
     def ack_message():
         logging.info("Acking message", extra={"ack_id": ack_id})
-        subscriber.acknowledge(subscription_path, [ack_id])
+        subscriber.acknowledge(request={"subscription": subscription_path, "ack_ids": [ack_id]})
 
     return ack_message
 
