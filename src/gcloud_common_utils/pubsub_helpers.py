@@ -1,6 +1,7 @@
 import logging
 import signal
 from typing import Callable
+from uuid import uuid4
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud.pubsub_v1 import SubscriberClient
@@ -35,7 +36,7 @@ def _pull_and_handle_message(subscriber, subscription_path, message_handler):
     # creating the ack callback with ack_id as a function scoped variable
     ack_callback = _create_message_ack_fn(subscriber, subscription_path, received_message.ack_id)
     trace_id = received_message.message.attributes.get("trace_id") or generate_trace_id()
-    with LogContext(trace_id=trace_id):
+    with LogContext(trace_id=trace_id, span_id=uuid4()):
         message_handler(received_message.message, ack_callback)
 
 
