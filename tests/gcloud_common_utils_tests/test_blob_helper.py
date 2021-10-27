@@ -24,7 +24,6 @@ def test_local_blob_helper_upload_and_download(make_and_delete_temp_folder):
 
     with BytesIO() as some_bytes:
         some_bytes.write(byte_string)
-        some_bytes.seek(0)
         blob_helper_local.upload_blob('a_test_bucket', 'a_test_file.txt', some_bytes)
 
     with BytesIO() as receiving_buffer:

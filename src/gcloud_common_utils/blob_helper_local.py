@@ -30,6 +30,7 @@ def upload_blob(bucket_name: str, destination_blob_name: str, file_like_object):
     logging.debug(f"Writing first to a temporary location {file_path}")
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, "wb") as file:
+        file_like_object.seek(0)
         shutil.copyfileobj(file_like_object, file)
 
     destination_path = _get_path(bucket_name, destination_blob_name)
