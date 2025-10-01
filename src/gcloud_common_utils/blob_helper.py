@@ -46,14 +46,31 @@ def blob_exists(bucket_name: str, partial_file_path: str) -> bool:
 
 
 @typechecked
-def download_blob(bucket_name: str, source_blob_name: str, file_like_object):
+def download_blob(bucket_name: str, source_blob_name: str, file_like_object: IOBase, include_metadata: bool = False):
+    """
+    Downloads a blob from the specified Google Cloud Storage bucket into a file-like object.
+
+    Args:
+        bucket_name (str): Name of the GCS bucket.
+        source_blob_name (str): Name of the blob to download.
+        file_like_object: A file-like object to write the blob's contents to.
+        include_metadata (bool, optional): If True, also returns the blob's metadata. Defaults to False.
+    Returns:
+        file_like_object: The file-like object containing the downloaded data.
+        If include_metadata is True, returns a tuple (file_like_object, blob.metadata), where blob.metadata may be None if the blob has no metadata.
+    """
     storage_client = storage.Client()
     logging.info('Downloading file', extra={'file': source_blob_name, 'bucket_name': bucket_name})
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(source_blob_name)
     blob.download_to_file(file_like_object)
     logging.info('Blob file was downloaded', extra={'file': source_blob_name})
+    if include_metadata:
+        return file_like_object, blob.metadata
     return file_like_object
+
+
+
 
 
 @typechecked
