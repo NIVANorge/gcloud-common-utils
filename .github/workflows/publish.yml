@@ -71,4 +71,4 @@ jobs:
 
       - name: Publish
         run: |
-          poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
+          poetry publish --username ${{ secrets.PYPI_USER }} --password ${{ secrets.PYPI_TOKEN }}
