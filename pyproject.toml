@@ -2,7 +2,7 @@
 name = "gcloud-common-utils"
 version = "0.5.0"  # Bumped for metadata feature
 description = "Common utilities to interact with gcloud, focused on google storage and google pubsub"
-authors = [""]
+authors = ["Cloud <cloud@eniva.no>"]
 readme = "README.md"
 packages = [{include = "gcloud_common_utils", from = "src"}]
 
