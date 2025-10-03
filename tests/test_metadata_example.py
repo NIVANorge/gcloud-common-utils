@@ -6,7 +6,7 @@ import os
 import tempfile
 import shutil
 from io import BytesIO
-from src.gcloud_common_utils import blob_helper_local
+from gcloud_common_utils import blob_helper_local
 
 def test_metadata_functionality():
     # Setup temporary directory
