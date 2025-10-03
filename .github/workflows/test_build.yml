@@ -1,10 +1,8 @@
-name: Test & Publish (Poetry)
+name: Test & Build (Poetry)
 
 on:
   push:
     branches: [ main ]
-    tags:
-      - "v*.*.*"
   pull_request:
     branches: [ main ]
 
@@ -79,8 +77,3 @@ jobs:
               exit 1
             }
           echo "Version check passed: $TAG_VERSION"
-
-      - name: Publish
-        run: |
-          pipx install poetry==${{ env.POETRY_VERSION }}
-          poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
