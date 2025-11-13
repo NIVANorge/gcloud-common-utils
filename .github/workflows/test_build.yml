@@ -1,0 +1,73 @@
+name: Test & Build (Poetry)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  id-token: write  # for trusted publishing (if enabled later)
+
+concurrency:
+  group: poetry-publish-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  POETRY_VERSION: 1.8.3
+  PYTHON_CACHE_DIR: .venv
+  POETRY_VIRTUALENVS_IN_PROJECT: true
+  POETRY_NO_INTERACTION: 1
+
+jobs:
+  test:
+    name: Test (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [ "3.10", "3.11", "3.12", "3.13" ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: ${{ matrix.python }}
+            cache: 'pip'
+
+      - name: Install Poetry
+        run: pipx install poetry==${{ env.POETRY_VERSION }}
+
+      - name: Cache virtualenv
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PYTHON_CACHE_DIR }}
+          key: venv-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            venv-${{ runner.os }}-${{ matrix.python }}-
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: poetry run pytest
+
+      - name: Build (only once)
+        if: matrix.python == '3.12'
+        run: |
+          poetry build
+          ls -l dist
+
+      - name: Verify tag matches version
+        run: |
+          VERSION_IN_PYPROJECT=$(grep -Po '(?<=^version = ")[^"]+' pyproject.toml)
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+            [ "$VERSION_IN_PYPROJECT" = "$TAG_VERSION" ] || {
+              echo "Tag v$TAG_VERSION does not match pyproject.toml version $VERSION_IN_PYPROJECT"
+            }
+          echo "Version check passed: $TAG_VERSION"
