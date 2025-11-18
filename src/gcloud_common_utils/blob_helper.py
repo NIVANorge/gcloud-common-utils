@@ -62,7 +62,7 @@ def download_blob(bucket_name: str, source_blob_name: str, file_like_object: IOB
     storage_client = storage.Client()
     logging.info('Downloading file', extra={'file': source_blob_name, 'bucket_name': bucket_name})
     bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(source_blob_name)
+    blob = bucket.get_blob(source_blob_name)
     blob.download_to_file(file_like_object)
     logging.info('Blob file was downloaded', extra={'file': source_blob_name})
     if include_metadata:
