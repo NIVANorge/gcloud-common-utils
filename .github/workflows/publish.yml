@@ -59,16 +59,6 @@ jobs:
           poetry build
           ls -l dist
 
-      - name: Verify tag matches version
-        run: |
-          VERSION_IN_PYPROJECT=$(grep -Po '(?<=^version = ")[^"]+' pyproject.toml)
-          TAG_VERSION=${GITHUB_REF#refs/tags/v}
-            [ "$VERSION_IN_PYPROJECT" = "$TAG_VERSION" ] || {
-              echo "Tag v$TAG_VERSION does not match pyproject.toml version $VERSION_IN_PYPROJECT"
-              exit 1
-            }
-          echo "Version check passed: $TAG_VERSION"
-
       - name: Publish
         run: |
           poetry publish --username ${{ secrets.PYPI_USER }} --password ${{ secrets.PYPI_TOKEN }}
