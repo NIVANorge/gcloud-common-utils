@@ -1,12 +1,15 @@
 # gcloud-common-utils
 
-Helpers for Google Cloud Storage and Pub/Sub.
+Helpers for common Google Cloud tasks used by NIVA involving following parts:
+
+ -  Storage 
+ -  Pub/Sub
 
 ## Install
 
 From PyPI (if published):
 ```bash
-pip install gcloud-common-utils
+poetry install gcloud-common-utils
 ```
 
 From source:
