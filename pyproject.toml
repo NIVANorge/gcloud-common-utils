@@ -7,12 +7,12 @@ readme = "README.md"
 packages = [{include = "gcloud_common_utils", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-google-auth = ">=2.57.0"
-google-cloud-storage = ">=3.13.0"
-google-cloud-pubsub = ">=2.39.0"
+python = "^3.11"
+google-auth = ">=2.62.1"
+google-cloud-storage = ">=3.17.1"
+google-cloud-pubsub = ">=2.43.0"
 typeguard = ">=2.6.0,<3.0.0"
-nivacloud-logging = ">=1.0.0"
+nivacloud-logging = {git = "https://github.com/NIVANorge/nivacloud-logging.git", tag= "1.1.0"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.3"
