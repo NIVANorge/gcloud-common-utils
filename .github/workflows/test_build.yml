@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -44,7 +44,7 @@ jobs:
 
       - name: Cache virtualenv
         id: cache-venv
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ env.PYTHON_CACHE_DIR }}
           key: venv-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles('poetry.lock') }}
